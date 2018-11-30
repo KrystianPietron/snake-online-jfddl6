@@ -10,6 +10,7 @@ class Snake extends React.Component {
         this.currentGameBoard = null
         this.direction = 'right'
         this.currentPlayerIndex = 0
+        this.matchId = null
         this.state = {
             gameBoard: (
                 Array(this.props.boardDimension)
@@ -36,7 +37,25 @@ class Snake extends React.Component {
 
     }
 
+    checkIsIfInTheMatch = () => {
+        if (window.location.hash) {
+            this.matchId = window.location.hash
+            this.currentPlayerIndex = 1
+            this.direction ='left'
+        } else {
+            this.startNewMatch()
+        }
+    }
+    startNewMatch = () => {
+        const newRef = this.props.firebaseDatabase.ref('snake-multi').push(
+            this.state
+        )
+        window.location.hash = newRef.key
+        console.log(newRef.key)
+        this.currentPlayerIndex = 0
+    }
     componentDidMount = () => {
+        this.checkIsIfInTheMatch()
         this.intervalId = setInterval(
             this.gameTick,
             this.state.gameTickTime
@@ -196,8 +215,8 @@ class Snake extends React.Component {
 
 Snake.defaultProps = {
     // @TODO is should be check if bigger than eg .5
-    boardDimension: 10,
-    startGameTickTime: 500
+    boardDimension: 50,
+    startGameTickTime: 300
 }
 
 export default Snake
