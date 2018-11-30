@@ -1,4 +1,5 @@
 import React from 'react'
+import GameBoard from './GameBoard'
 
 class Snake extends React.Component {
     state = {
@@ -15,19 +16,7 @@ class Snake extends React.Component {
         const gameBoard = JSON.parse(JSON.stringify(this.state.gameBoard))
 
         return (
-            <div>
-                {
-                    gameBoard.map(row => (
-                        <div>
-                            {
-                                row.map(cell => (
-                                    <span>{cell}</span>
-                                ))
-                            }
-                        </div>
-                    ))
-                }
-            </div>
+           <GameBoard gameBoard={gameBoard} />
         )
     }
 }
