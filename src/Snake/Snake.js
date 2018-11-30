@@ -8,6 +8,8 @@ class Snake extends React.Component {
         const halfBoardDimension = Math.ceil(props.boardDimension / 2) - 1
         this.intervalId = null
         this.currentGameBoard = null
+        this.direction = 'right'
+        this.currentPlayerIndex = 0
         this.state = {
             gameBoard: (
                 Array(this.props.boardDimension)
@@ -26,74 +28,110 @@ class Snake extends React.Component {
                     { x: halfBoardDimension - 1, y: halfBoardDimension }
                 ]
             ],
-            directions: [
-                'right',
-                'left'
-            ],
             food: [
                 // { x: 2, y: 2 }
             ],
-            currentPlayerIndex: 0,
             gameTickTime: props.startGameTickTime
         }
 
     }
-    componentDidMount = () => (
+
+    componentDidMount = () => {
         this.intervalId = setInterval(
             this.gameTick,
             this.state.gameTickTime
         )
-    )
-    componentWillMount = () => (
+
+        window.addEventListener(
+            'keydown',
+            this.onArrowKeyDown
+        )
+    }
+    componentWillMount = () => {
         clearInterval(this.intervalId)
-    )
+        window.addEventListener(
+            'keydown',
+            this.onArrowKeyDown
+        )
+    }
     gameTick = () => (
         console.log('Tick'),
         this.checkIfMovesAreAvailable()
     )
-    checkIfMovesAreAvailable = () => (
-        this.state.snakes.forEach(snakePositions, snakeIndex => {
-            const snakeHeadPosition = snakePositions[0]
-            const direction = this.state.directions[snakeIndex]
-            let newHeadPosition = null
-            switch (direction) {
-                case 'left':
-                    newHeadPosition = {
-                        x: snakeHeadPosition.x - 1,
-                        y: snakeHeadPosition.y,
-                    }
-                    break
-                case 'right':
-                    newHeadPosition = {
-                        x: snakeHeadPosition.x + 1,
-                        y: snakeHeadPosition.y,
-                    }
-                    break
-                case 'top':
-                    newHeadPosition = {
-                        x: snakeHeadPosition.x,
-                        y: snakeHeadPosition.y - 1,
-                    }
-                    break
-                case 'bottom':
-                    newHeadPosition = {
-                        x: snakeHeadPosition.x,
-                        y: snakeHeadPosition.y + 1,
-                    }
-                    break
-                    default:
-            }
-            if (
-                this.currentGameBoard[newHeadPosition.y] &&
-                this.currentGameBoard[newHeadPosition.y][newHeadPosition.x]
-            ){
-                this.moveSnake(snakeIndex)
-            }else{
-                this.endGame(snakeIndex)
-            }
+
+    checkIfMovesAreAvailable = () => {
+        const snakeHeadPosition = this.state.snakes[this.currentPlayerIndex][0]
+        let newHeadPosition = null
+        switch (this.direction) {
+            case 'left':
+                newHeadPosition = {
+                    x: snakeHeadPosition.x - 1,
+                    y: snakeHeadPosition.y,
+                }
+                break
+            case 'right':
+                newHeadPosition = {
+                    x: snakeHeadPosition.x + 1,
+                    y: snakeHeadPosition.y,
+                }
+                break
+            case 'up':
+                newHeadPosition = {
+                    x: snakeHeadPosition.x,
+                    y: snakeHeadPosition.y - 1,
+                }
+                break
+            case 'down':
+                newHeadPosition = {
+                    x: snakeHeadPosition.x,
+                    y: snakeHeadPosition.y + 1,
+                }
+                break
+            default:
         }
-        )
+        if (
+            this.currentGameBoard[newHeadPosition.y] &&
+            this.currentGameBoard[newHeadPosition.y][newHeadPosition.x]
+        ) {
+            this.moveSnake(newHeadPosition)
+        } else {
+            this.endGame()
+        }
+    }
+    endGame = () => (
+        alert(`YOU LOST!`)
     )
+    moveSnake = (newHeadPosition) => {
+        const snake = this.state.snakes[this.currentPlayerIndex]
+        const snakeWithoutTrail = snake.slice(0, -1)
+        const snakeWithNewHead = [newHeadPosition].concat(snakeWithoutTrail)
+
+        const newSnakes = this.state.snakes.map((snake, i) => (
+            this.currentPlayerIndex === i ?
+                snakeWithNewHead
+                :
+                snake
+        ))
+        this.setState({ snakes: newSnakes })
+    }
+
+    onArrowKeyDown = event => {
+        switch (event.key) {
+            case 'ArrowUp':
+            this.direction='up'
+            break
+            case 'ArrowDown':
+            this.direction='down'
+            break
+            case 'ArrowRight':
+            this.direction='right'
+            break
+            case 'ArrowLeft':
+            this.direction='left'
+            break
+            default:
+        }
+    }
     composeGameBoard = () => {
         const gameBoardCopy = JSON.parse(JSON.stringify(this.state.gameBoard))
         this.state.snakes.forEach(snake => (
