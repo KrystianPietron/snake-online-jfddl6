@@ -1,20 +1,27 @@
 import React from 'react'
 import GameCell from './GameCell'
-const style={
+const style = {
     display: 'flex',
-    backgroundColor: 'red'
 }
-const GameRow = (props) => (
-    <div
-    style = {style}
-    >
-        {
-            props.gameBoard.map(row => (
-                <div>
-                    <GameCell row={row} />
-                </div>
-            ))
-        }
-    </div>
-)
+const GameRow = (props) => {
+    const numberOfCells = props.row.length
+
+    return (
+        <div
+            style={{
+                ...style,
+                height: 100 / numberOfCells + '%',
+            }}
+        >
+            {
+                props.row.map(cell => (
+                    <GameCell
+                        cell={cell}
+                        numberOfCells={numberOfCells}
+                    />
+                ))
+            }
+        </div>
+    )
+}
 export default GameRow

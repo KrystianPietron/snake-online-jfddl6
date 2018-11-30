@@ -16,14 +16,14 @@ class Snake extends React.Component {
         const gameBoard = JSON.parse(JSON.stringify(this.state.gameBoard))
 
         return (
-           <GameBoard gameBoard={gameBoard} />
+            <GameBoard gameBoard={gameBoard} />
         )
     }
 }
 
 Snake.defaultProps = {
     // @TODO is should be check if bigger than eg .5
-    boardDimension: 10
+    boardDimension: 15
 }
 
 export default Snake

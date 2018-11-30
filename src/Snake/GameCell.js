@@ -3,19 +3,16 @@ const style = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    flexBasis: '10%'
 
 }
 const GameCell = (props) => (
     <div
-    style = {style}
+        style={{
+            ...style,
+            flexBasis: 100 / props.numberOfCells + '%',
+        }}
     >
-        {
-            props.row.map(cell => (
-                <div>{cell}</div>
-            )
-            )
-        }
+        <div>{props.cell}</div>
     </div>
 )
 export default GameCell
