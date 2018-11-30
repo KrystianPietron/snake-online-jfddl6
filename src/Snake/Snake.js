@@ -96,6 +96,7 @@ class Snake extends React.Component {
             this.moveSnake(newHeadPosition)
         } else {
             this.endGame()
+            clearInterval(this.intervalId)
         }
     }
     endGame = () => (
