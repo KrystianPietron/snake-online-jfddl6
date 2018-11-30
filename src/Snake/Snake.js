@@ -9,11 +9,21 @@ class Snake extends React.Component {
                     Array(this.props.boardDimension)
                         .fill(1)
                 )
-        )
+        ),
+        snake1: [{
+            x:5,
+            y:5
+        }]
     }
-
+composeGameBoard = () => {
+    const gameBoardCopy = JSON.parse(JSON.stringify(this.state.gameBoard))
+    this.state.snake1.forEach(bodyCellPosition=>(
+        gameBoardCopy[bodyCellPosition.y][bodyCellPosition.x]=0
+    ))
+    return gameBoardCopy
+}
     render() {
-        const gameBoard = JSON.parse(JSON.stringify(this.state.gameBoard))
+        const gameBoard = this.composeGameBoard()
 
         return (
             <GameBoard gameBoard={gameBoard} />
@@ -23,7 +33,7 @@ class Snake extends React.Component {
 
 Snake.defaultProps = {
     // @TODO is should be check if bigger than eg .5
-    boardDimension: 15
+    boardDimension: 10
 }
 
 export default Snake

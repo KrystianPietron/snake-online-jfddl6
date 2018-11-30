@@ -6,7 +6,7 @@ const style = {
     height: '100vw',
     maxHeight: '700px',
     margin: '0 auto',
-    backgroundColor: 'red'
+    border: '1px solid black'
 }
 const GameBoard = (props) => (
     <div
