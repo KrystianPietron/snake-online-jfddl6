@@ -1,8 +1,13 @@
 import React from 'react'
 import GameCell from './GameCell'
-
+const style={
+    display: 'flex',
+    backgroundColor: 'red'
+}
 const GameRow = (props) => (
-    <div>
+    <div
+    style = {style}
+    >
         {
             props.gameBoard.map(row => (
                 <div>
